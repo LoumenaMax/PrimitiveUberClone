@@ -1,6 +1,4 @@
-import java.awt.Point;
 import java.util.ArrayList;
-
 
 public class Driver extends Person{
 
@@ -9,8 +7,8 @@ public class Driver extends Person{
 	private Client client; 
 	private ArrayList<Integer> ratings;
 	
-	public Driver(String name, double balance, Point location, Client client, String carTitle) {
-		super(name, balance, location);
+	public Driver(String name, double balance, String carTitle) {
+		super(name, balance);
 		this.carTitle = carTitle;
 		this.available = true;
 		ratings = new ArrayList<Integer>();
@@ -20,10 +18,12 @@ public class Driver extends Person{
 		ratings.add(rating);
 	}
 
-	public boolean request(Trip t) {
-		//TODO
+	public void acceptRequest() {
 		available = false;
-		return true;
+	}
+	
+	public void endTrip() {
+		available = true;
 	}
 	
 	public boolean available() {

@@ -1,0 +1,18 @@
+Drivers:
+John Doe,0,Volkswagen
+Anderson Cooper,0,Nissan
+Broseph Brohemian,0,Tesla
+Jack Nicholson,0,Subaru
+Joke Name,0,Dodge
+Maximus Aurelius,0,Toyota
+Not Even A Name,0,Acura
+Prince,0,Mitsubishi
+Homeless Dude,0,Maserati
+XXXTentacion,0,Lexus
+
+Passengers:
+Dude,100
+Dudette,30
+Myself,1000
+King James,75
+Coolio,500
