@@ -11,6 +11,12 @@ public class Uber {
 	public final static String FINAL_LOG_FILENAME = "final_log.dat";
 	private static final int RAND_TRIP_NUMBER = 5;
 	
+	/**
+	 * Parses a given file into a given Client object
+	 * @param filename The filename you will parse from
+	 * @param client The client you will update with the parsed information
+	 * @return true if no errors occur, false otherwise
+	 */
 	private static boolean parse(String filename, Client client) {
 		Scanner s;
 		String[] line;
@@ -26,7 +32,7 @@ public class Uber {
 		if(s.nextLine().equals("Drivers:")) {
 			while(!(sline = s.nextLine()).equals("")) {
 				line = sline.split(",");
-				client.addDriver(new Driver(line[0], Double.parseDouble(line[1]), client, line[2]));
+				client.addDriver(new Driver(line[0], Double.parseDouble(line[1]), line[2]));
 				size++;
 			}
 		}
@@ -63,6 +69,10 @@ public class Uber {
 		return true;
 	}
 	
+	/**
+	 * Creates a trip from a random passenger in the given client to a random destination.
+	 * @param client The client you will put the trip into
+	 */
 	private static void randTrip(Client client) {
 		Random rand = new Random();
 		Passenger randPass = client.getPassenger();
@@ -84,6 +94,8 @@ public class Uber {
 		}
 		for(int i = 0; i < RAND_TRIP_NUMBER; i++) {
 			randTrip(client);
+		}
+		while(!client.finishedTrips()) {
 		}
 		client.logTrips(TRIP_LOG_FILENAME);
 		client.logFinal(FINAL_LOG_FILENAME);

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Random;
+import java.util.Scanner;
 
 
 /**
@@ -18,7 +19,7 @@ public class Client {
 	public static final double
 			DRIVER_SHARE = 0.75,
 			UBER_SHARE = 0.25,
-			PAYMENT_RATE = 1.00;
+			PAYMENT_RATE = 0.10;
 	private ArrayList<Driver> drivers;
 	private ArrayList<Passenger> passengers;
 	private ArrayList<Trip> trips;
@@ -33,15 +34,37 @@ public class Client {
 		trips = new ArrayList<Trip>();
 	}
 
+	public boolean finishedTrips() {
+		for(Trip t : trips) {
+			if(t.isRunning())
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Gets a driver from the client at a specific index
+	 * @param index The index of the driver
+	 * @return The driver at the given index in the ArrayList
+	 */
 	public Driver getDriver(int index) {
 		return drivers.get(index);
 	}
 
+	/**
+	 * Gets a random passenger from the client
+	 * @return A random passenger from the ArrayList of passengers
+	 */
 	public Passenger getPassenger() {
 		Random rand = new Random();
 		return passengers.get(rand.nextInt(passengers.size()));
 	}
-	
+
+	/**
+	 * Gets a passenger from the client at a specific index
+	 * @param index The index of the passenger
+	 * @return The passenger at the given index in the ArrayList
+	 */
 	public Passenger getPassenger(int index) {
 		return passengers.get(index);
 	}
@@ -62,6 +85,34 @@ public class Client {
 		passengers.add(p);
 	}
 	
+	/** Asks a specific driver if they want to take a trip
+	 * @param driver The driver you wish to ask to accept a trip
+	 * @param trip The trip you are asking the driver to accept
+	 * @return True if the driver accepted the trip, false otherwise.
+	 */
+	public boolean askDriver(Driver driver, Trip trip) {
+		Scanner input = new Scanner(System.in);
+		while(true) {
+			System.out.println(driver + ", would you like to accept " + trip.getPassenger() + "\'s ride from " + 
+					trip.getStart() + " to " + 
+					trip.getEnd() + "?(y\\n)");
+			switch(input.next()) {
+				case "yes":
+					driver.acceptRequest();
+					return true;
+				case "y":
+					driver.acceptRequest();
+					return true;
+				case "no":
+					return false;
+				case "n":
+					return false;
+				default:
+					System.out.println("We need a yes(yes|y) or no(no|n) answer.");
+			}
+		}
+	}
+	
 	/**
 	 * Checks the current list of drivers in Client for the ones with the highest priority.
 	 * @param trip The trip that contains the information needed to properly sort the drivers
@@ -73,11 +124,11 @@ public class Client {
 			if(d.available())
 				orderedDrivers.add(d);
 		}
-		while(!trip.askDriver(orderedDrivers.peek())) {
+		while(!askDriver(orderedDrivers.peek(), trip)) {
 			orderedDrivers.poll();
 		}
 		if(orderedDrivers.size() == 0) {
-			System.out.println("No drivers are available to take " + trip.getPassenger().getName() + " to (" + trip.getEnd().x + "," + trip.getEnd().y + ")");
+			System.out.println("No drivers are available to take " + trip.getPassenger() + " to " + trip.getEnd());
 			return null;
 		}
 		System.out.println(trip.getPassenger() + ", " + orderedDrivers.peek() + " has accepted your ride!");
@@ -89,6 +140,11 @@ public class Client {
 	 * @param	trip	The trip you wish to add.
 	 */
 	public void addTrip(Trip trip) {
+		if(!trip.checkBoundaries()) {
+			System.out.println("The location you have requested is not within acceptable boundaries. \n" +
+					"Please choose a location between (0,0) and (300,300)");
+			return;
+		}
 		trips.add(trip);
 		Driver driver = checkDrivers(trip);
 		if(driver != null) {
@@ -96,14 +152,23 @@ public class Client {
 				trip.execute();
 			}
 		}
+		trip.stopRunning();
 	}
 
+	/**
+	 * Logs every trip object into the given filename
+	 * @param filename The log you will put all the trips into
+	 */
 	public void logTrips(String filename) {
 		for(Trip t : trips) {
 			t.logTrip(filename);
 		}
 	}
 	
+	/**
+	 * Logs the final information into the given filename
+	 * @param filename The log you wish to put the final information into
+	 */
 	public void logFinal(String filename) {
 		try {
 			BufferedWriter b = new BufferedWriter(new FileWriter(filename, true));
