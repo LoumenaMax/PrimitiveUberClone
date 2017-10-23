@@ -51,7 +51,7 @@ public class Uber {
 		if(s.nextLine().equals("Drivers:")) {
 			while(!(sline = s.nextLine()).equals("")) {
 				line = sline.split(",");
-				drivers.add(new Driver(line[0], Double.parseDouble(line[1]), line[2]));
+				drivers.add(new Driver(line[0], new Wallet(Double.parseDouble(line[1])), line[2]));
 				size++;
 			}
 		}
@@ -70,7 +70,7 @@ public class Uber {
 		if(s.nextLine().equals("Passengers:")) {
 			while(s.hasNextLine()) {
 				line = s.nextLine().split(",");
-				passengers.add(new Passenger(line[0], Double.parseDouble(line[1])));
+				passengers.add(new Passenger(line[0], new Wallet(Double.parseDouble(line[1]))));
 				size++;
 			}
 			s.close();
@@ -145,13 +145,13 @@ public class Uber {
 			b.write("New Balance of Drivers:");
 			b.newLine();
 			for(Driver d : drivers) {
-				b.write("   " + d + ": " + String.format("%.2f", d.getBalance()));
+				b.write("   " + d + ": " + d.getWallet());
 				b.newLine();
 			}
 			b.write("New Balance of Passengers:");
 			b.newLine();
 			for(Passenger p : passengers) {
-				b.write("   " + p + ": " + String.format("%.2f", p.getBalance()));
+				b.write("   " + p + ": " + p.getWallet());
 				b.newLine();
 			}
 			b.newLine();
@@ -200,42 +200,13 @@ public class Uber {
 			if(d.available())
 				orderedDrivers.add(d);
 		}
-		while(!askDriver(orderedDrivers.peek(), trip)) {
+		while(!orderedDrivers.peek().askDriver(trip)) {
 			orderedDrivers.poll();
 		}
 		if(orderedDrivers.size() == 0) {
 			return null;
 		}
 		return orderedDrivers.poll();
-	}
-	
-	/** Asks a driver specified by driver to accept a trip specified by trip.
-	 * @param driver The driver you will ask to accept a ride.
-	 * @param trip The trip you will retrieve information about the ride from
-	 * @return True if the driver accepts, False otherwise.
-	 */
-	public static boolean askDriver(Driver driver, Trip trip) {
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		while(true) {
-			System.out.println(driver + ", would you like to accept " + trip.getPassenger() + "\'s ride from " + 
-					trip.getStart() + " to " + 
-					trip.getEnd() + "?(y\\n)");
-			switch(input.next()) {
-				case "yes":
-					driver.acceptRequest();
-					return true;
-				case "y":
-					driver.acceptRequest();
-					return true;
-				case "no":
-					return false;
-				case "n":
-					return false;
-				default:
-					System.out.println("We need a yes(yes|y) or no(no|n) answer.");
-			}
-		}
 	}
 	
 	public static void main(String[] args) {
@@ -274,6 +245,7 @@ public class Uber {
 			Thread currentTrip = new Thread(new TripRunner(newTrip));
 			currentTrip.start();
 			threads.add(currentTrip);
+			//t.join()
 		}
 		for(Thread t : threads) {
 			try {

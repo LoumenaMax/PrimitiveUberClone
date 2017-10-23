@@ -40,13 +40,13 @@ public class TripRunner implements Runnable {
 	 */
 	@Override
 	public void run() {
-		if(trip.transaction()) {
-			System.out.format(trip.getPassenger() + ", your transaction of %.2f to " + trip.getDriver() + " has been successfully completed.%n", trip.getFare());
+		if(trip.getTransaction().makePayment()) {
+			System.out.println(trip.getPassenger() + ", your transaction of " + trip.getTransaction() + " to " + trip.getDriver() + " has been successfully completed.");
 		}
 		else {
-			System.out.format(trip.getPassenger() + " does not have enough to complete the transaction.\n" +
-					"   " + trip.getPassenger() + " has: $%.2f\n" +
-					"   Transaction Amount: $%.2f\n", trip.getPassenger().getBalance(), trip.getFare());
+			System.out.println(trip.getPassenger() + " does not have enough to complete the transaction." +
+					"\n   " + trip.getPassenger() + " has: " + trip.getPassenger().getWallet() +
+					"\n   Transaction Amount: " + trip.getTransaction());
 			return;
 		}
 		try {

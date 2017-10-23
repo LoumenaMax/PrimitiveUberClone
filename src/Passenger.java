@@ -11,8 +11,8 @@ public class Passenger extends Person{
 	 * @param balance The amount of money the Passenger has.
 	 * @param client The interface between the Passenger and the Drivers.
 	 */
-	public Passenger(String name, double balance) {
-		super(name, balance);
+	public Passenger(String name, Wallet wallet) {
+		super(name, wallet);
 		inTrip = false;
 	}
 

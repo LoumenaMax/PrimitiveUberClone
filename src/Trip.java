@@ -2,7 +2,7 @@ import java.awt.Point;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
+import java.util.Random;
 
 
 /**
@@ -14,7 +14,7 @@ public class Trip {
 	private Passenger passenger;
 	private Driver driver;
 	private Point start, end;
-	private double fare;
+	private Transaction transaction;
 	private int rating;
 	
 	/**
@@ -29,7 +29,7 @@ public class Trip {
 		this.passenger = passenger;
 		passenger.startTrip();
 		rating = -1;
-		fare = -1;
+		transaction = null;
 	}
 	
 	/**
@@ -95,56 +95,22 @@ public class Trip {
 	}
 	
 	/**
-	 * Method to obtain the fare amount
-	 * @return The amount that this trip will cost the passenger.
+	 * Method to obtain the transaction object
+	 * @return The transaction object for this trip
 	 */
-	public double getFare() {
-		return fare;
-	}
-	
-	/**
-	 * Calls a transaction between the passenger and the driver for the fare
-	 * @return True if the transaction completed successfully, false otherwise
-	 */
-	public boolean transaction() {
-		if(passenger.transaction(driver, fare))
-			return true;
-		return false;
+	public Transaction getTransaction() {
+		return transaction;
 	}
 	
 	/**
 	 * Asks the passenger of this trip to rate the driver of this trip. Updates the trip object and the drivers rating list.
 	 */
 	public void askPassenger() {
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		while(rating == -1) {
-			System.out.println(passenger + ", how was your experience with " + driver + "?(1-5)");
-			switch(input.nextLine()) {
-				case "1":
-					driver.addRating(1);
-					rating = 1;
-					break;
-				case "2":
-					driver.addRating(2);
-					rating = 2;
-					break;
-				case "3":
-					driver.addRating(3);
-					rating = 3;
-					break;
-				case "4":
-					driver.addRating(4);
-					rating = 4;
-					break;
-				case "5":
-					driver.addRating(5);
-					rating = 5;
-					break;
-				default:
-					System.out.println("We need a number between 1 and 5.");
-			}
-		}
+		System.out.println(passenger + ", how was your experience with " + driver + "?(1-5)");
+		Random rand = new Random();
+		rating = rand.nextInt(5) + 1;
+		System.out.println(rating);
+		driver.addRating(rating);
 	}
 	
 	/**
@@ -153,7 +119,10 @@ public class Trip {
 	 */
 	public void addDriver(Driver driver) {
 		this.driver = driver;
-		this.fare = Uber.PAYMENT_RATE * (driver.getDistance(passenger) + driver.getDistance(end));
+		this.transaction = new Transaction(
+				passenger.getWallet(),
+				driver.getWallet(),
+				Uber.PAYMENT_RATE * (driver.getDistance(passenger) + driver.getDistance(end)));
 	}
 	
 	/** Logs this trips information into a file.
@@ -183,15 +152,16 @@ public class Trip {
 			if(driver != null) {
 				b.write("   Driver Average Rating: " + driver.getRating());
 				b.newLine();
-				b.write("   Driver Balance: " + String.format("%.2f", driver.getBalance()));
+				b.write("   Driver Balance: " + driver.getWallet());
 				b.newLine();
 			}
-			b.write("   Passenger Balance: " + String.format("%.2f", passenger.getBalance()));
+			b.write("   Passenger Balance: " + passenger.getWallet());
 			b.newLine();
-			if(fare != -1) {
-				b.write("   Fare: " + String.format("%.2f", fare));
+			if(transaction != null) {
+				b.write("   Fare: " + String.format("%.2f", transaction.getAmount()));
 				b.newLine();
 			}
+			b.newLine();
 			b.flush();
 			b.close();
 		}

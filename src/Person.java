@@ -8,25 +8,25 @@ import java.util.Random;
  */
 public abstract class Person {
 	protected String name;
-	protected double balance;
+	protected Wallet wallet;
 	protected Point location;
 	
 	/**
 	 * @param name The name of the person you wish to make a Person object of
 	 * @param balance The amount of money this Person will start with
 	 */
-	public Person(String name, double balance) {
+	public Person(String name, Wallet wallet) {
 		this.name = name;
-		this.balance = balance;
+		this.wallet = wallet;
 		Random ran = new Random();
 		this.location = new Point(ran.nextInt(300), ran.nextInt(300));
 	}
 	
-	/**
+	/** Method to retrieve the wallet of the person
 	 * @return The current balance of this person
 	 */
-	public double getBalance() {
-		return balance;
+	public Wallet getWallet() {
+		return wallet;
 	}
 
 	/** Method to retrieve the Persons location
@@ -45,51 +45,6 @@ public abstract class Person {
 	
 	public void updateLocation(Point location) {
 		this.location = location;
-	}
-	
-	/** Removes the amount from your balance
-	 * @param amount The amount removed from your balance
-	 * @return The new balance of this object
-	 */
-	public double pay(double amount) {
-		if(amount > balance)
-			return -1;
-		balance -= amount;
-		return balance;
-	}
-	
-	/** Adds the amount given to your balance
-	 * @param amount The amount added to your balance
-	 * @return The new balance of this object
-	 */
-	public double receive(double amount) {
-		balance += amount;
-		return balance;
-	}
-	
-	/** Checks your balance against the amount given.
-	 * @param amount The amount to check your balance against
-	 * @return True if you have enough money to make such a purchase, false otherwise.
-	 */
-	public boolean checkBalance(double amount) {
-		if(balance < amount) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Pays a set amount to person p2.
-	 * @param p2 The person who will receive the amount specified, minus Uber's cut.
-	 * @param amount The amount to transfer to p2, minus Uber's cut.
-	 * @return True if the transaction was handled successfully, false otherwise.
-	 */
-	public boolean transaction(Person p2, double amount) {
-		if(!checkBalance(amount))
-			return false;
-		pay(amount);
-		p2.receive(amount * Uber.DRIVER_SHARE);
-		return true;
 	}
 	
 	/** Gets the distance between two Person objects
