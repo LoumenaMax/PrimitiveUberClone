@@ -6,6 +6,7 @@ import java.util.ArrayList;
  */
 public class Driver extends Person{
 
+	@SuppressWarnings("unused")
 	private String carTitle;
 	private boolean available;
 	private ArrayList<Integer> ratings;

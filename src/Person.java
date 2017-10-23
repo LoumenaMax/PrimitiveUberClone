@@ -28,25 +28,18 @@ public abstract class Person {
 	public double getBalance() {
 		return balance;
 	}
-	
-	/**
-	 * @return The x-value of this objects location
+
+	/** Method to retrieve the Persons location
+	 * @return The location of this object
 	 */
-	public int getX() {
-		return location.x;
-	}
-	
-	/**
-	 * @return The y-value of this objects location
-	 */
-	public int getY() {
-		return location.y;
+	public Point getLocation() {
+		return location;
 	}
 	
 	/** A toString for the location of this object
 	 * @return The location of this object in the form (x,y)
 	 */
-	public String getLocation() {
+	public String getLocationString() {
 		return "(" + location.x + "," + location.y + ")";
 	}
 	
@@ -80,9 +73,6 @@ public abstract class Person {
 	 */
 	public boolean checkBalance(double amount) {
 		if(balance < amount) {
-			System.out.format(name + " does not have enough to complete the transaction.\n" +
-					"   " + name + " has: $%.2f\n" +
-					"   Transaction Amount: $%.2f\n", balance, amount);
 			return false;
 		}
 		return true;
@@ -98,8 +88,7 @@ public abstract class Person {
 		if(!checkBalance(amount))
 			return false;
 		pay(amount);
-		p2.receive(amount * Client.DRIVER_SHARE);
-		System.out.println(name + ", your transaction of " + amount + " to " + p2 + " has been successfully completed.");
+		p2.receive(amount * Uber.DRIVER_SHARE);
 		return true;
 	}
 	
@@ -108,7 +97,7 @@ public abstract class Person {
 	 * @return A double that is the distance from the given Person object to this Person object.
 	 */
 	public double getDistance(Person p1) {
-		return Math.sqrt(Math.pow((location.x - p1.getX()), 2) + Math.pow((location.y - p1.getY()), 2));
+		return Math.sqrt(Math.pow((location.x - p1.getLocation().x), 2) + Math.pow((location.y - p1.getLocation().y), 2));
 	}
 	/** Gets the distance from the point specified to this Person object
 	 * @param p1 The point you will find the distance to

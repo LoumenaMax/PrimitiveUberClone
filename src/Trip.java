@@ -3,8 +3,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 /**
@@ -12,14 +10,12 @@ import java.util.TimerTask;
  * @author max
  */
 public class Trip {
-	public final static int WAIT_RATE = 1000;
 	
 	private Passenger passenger;
 	private Driver driver;
 	private Point start, end;
 	private double fare;
 	private int rating;
-	private boolean running;
 	
 	/**
 	 * Constructs a Trip 
@@ -27,28 +23,13 @@ public class Trip {
 	 * @param end Where the passenger wants to go to
 	 * @param passenger The passenger who is requesting a trip
 	 */
-	public Trip(Point start, Point end, Passenger passenger) {
-		this.start = start;
+	public Trip(Point end, Passenger passenger) {
+		this.start = passenger.getLocation();
 		this.end = end;
 		this.passenger = passenger;
-		running = true;
+		passenger.startTrip();
 		rating = -1;
 		fare = -1;
-	}
-
-	/**
-	 * Ends the indicator that the trip is ongoing, due to unforeseen circumstances.
-	 */
-	public void stopRunning() {
-		running = false;
-	}
-
-	/**
-	 * Checks to see if this trip has finished.
-	 * @return true if the trip is complete, false otherwise
-	 */
-	public boolean isRunning() {
-		return running;
 	}
 	
 	/**
@@ -56,8 +37,8 @@ public class Trip {
 	 * @return true if the end location is within the 300x300 grid, false otherwise.
 	 */
 	public boolean checkBoundaries() {
-		if(end.x <= 0 || end.x > 300 ||
-			end.y <= 0 || end.y > 300)
+		if(end.x <= 0 || end.x > Uber.GRID_HEIGHT ||
+			end.y <= 0 || end.y > Uber.GRID_HEIGHT)
 			return false;
 		return true;
 	}
@@ -71,21 +52,42 @@ public class Trip {
 		return true;
 	}
 	
-	/**
+	/** Method to retrieve the passenger of the trip
 	 * @return The passenger of this trip
 	 */
 	public Passenger getPassenger() {
 		return passenger;
 	}
+	
+	/** Method to retrieve the driver of the trip
+	 * @return The driver of this trip
+	 */
+	public Driver getDriver() {
+		return driver;
+	}
 
-	/**
+	/** MEthod to retrieve a string of the ending location of the trip.
 	 * @return The ending location of this trip in the form (x,y)
 	 */
 	public String getEnd() {
 		return "(" + end.x + "," + end.y + ")";
 	}
 	
-	/**
+	/** Method to retrieve the ending location of the trip.
+	 * @return The ending location of this trip in the form (x,y)
+	 */
+	public Point getEndPoint() {
+		return end;
+	}
+	
+	/** Method to retrieve the starting location of the trip.
+	 * @return The starting location of this trip in the form (x,y)
+	 */
+	public Point getStartPoint() {
+		return start;
+	}
+	
+	/** Method to retrieve a string of the starting location of the trip.
 	 * @return The starting location of this trip in the form (x,y)
 	 */
 	public String getStart() {
@@ -93,51 +95,32 @@ public class Trip {
 	}
 	
 	/**
+	 * Method to obtain the fare amount
 	 * @return The amount that this trip will cost the passenger.
 	 */
 	public double getFare() {
 		return fare;
 	}
-
+	
 	/**
-	 * Executes the trip. Sets a time based on the distance and WAIT_TIME for the program to wait for.
-	 * Changes the values of the driver and passenger based on the end location of the trip.
+	 * Calls a transaction between the passenger and the driver for the fare
+	 * @return True if the transaction completed successfully, false otherwise
 	 */
-	public void execute() {
-		System.out.println(passenger + ", " + driver + " is on his way.");
-		long ETAToPickUp = (long)(WAIT_RATE * passenger.getDistance(driver));
-		long ETAToDropOff = (long)(WAIT_RATE * passenger.getDistance(end));
-		System.out.println("ETA to pick up: " + (ETAToPickUp / 1000) + " seconds.");
-		TimerTask pickUp = new TimerTask() {
-			public void run() {
-				System.out.println(passenger + ", " + driver + " has arrived at your location.");
-				driver.updateLocation(start);
-			}
-		};
-		TimerTask dropOff = new TimerTask() {
-			public void run() {
-				System.out.println(driver + " has arrived at the destination.");
-				askPassenger();
-				driver.endTrip();
-				passenger.updateLocation(end);
-				driver.updateLocation(end);
-				running = false;
-			}
-		};
-		
-		Timer timer = new Timer();
-		timer.schedule(pickUp, ETAToPickUp);
-		timer.schedule(dropOff, ETAToPickUp + ETAToDropOff);
+	public boolean transaction() {
+		if(passenger.transaction(driver, fare))
+			return true;
+		return false;
 	}
 	
 	/**
 	 * Asks the passenger of this trip to rate the driver of this trip. Updates the trip object and the drivers rating list.
 	 */
 	public void askPassenger() {
+		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
 		while(rating == -1) {
 			System.out.println(passenger + ", how was your experience with " + driver + "?(1-5)");
-			switch(input.next()) {
+			switch(input.nextLine()) {
 				case "1":
 					driver.addRating(1);
 					rating = 1;
@@ -165,14 +148,12 @@ public class Trip {
 	}
 	
 	/**
-	 * Adds the driver to the trip object, calculates the fare based on the drivers location and the given end point, and conducts a transaction.
+	 * Adds the driver to the trip object and calculates the fare based on the drivers location and the given end point.
 	 * @param driver The driver that will take the passenger to the end location.
-	 * @return	true if the passenger can pay the fare, false otherwise.
 	 */
-	public boolean addDriver(Driver driver) {
+	public void addDriver(Driver driver) {
 		this.driver = driver;
-		this.fare = Client.PAYMENT_RATE * (driver.getDistance(passenger) + driver.getDistance(end));
-		return passenger.transaction(driver, fare);
+		this.fare = Uber.PAYMENT_RATE * (driver.getDistance(passenger) + driver.getDistance(end));
 	}
 	
 	/** Logs this trips information into a file.
@@ -191,11 +172,9 @@ public class Trip {
 				b.write("Trip was not successfully completed.");
 				b.newLine();
 			}
-			b.write("   Start: " + "(" + 
-					start.x + "," + start.y + ")");
+			b.write("   Start: " + getStart());
 			b.newLine();
-			b.write("   End: " + "(" + 
-					end.x + "," + end.y + ")");
+			b.write("   End: " + getEnd());
 			b.newLine();
 			if(rating != -1) {
 				b.write("   Rating: " + rating);
@@ -204,13 +183,13 @@ public class Trip {
 			if(driver != null) {
 				b.write("   Driver Average Rating: " + driver.getRating());
 				b.newLine();
-				b.write("   Driver Balance: " + driver.getBalance());
+				b.write("   Driver Balance: " + String.format("%.2f", driver.getBalance()));
 				b.newLine();
 			}
-			b.write("   Passenger Balance: " + passenger.getBalance());
+			b.write("   Passenger Balance: " + String.format("%.2f", passenger.getBalance()));
 			b.newLine();
 			if(fare != -1) {
-				b.write("   Fare: " + fare);
+				b.write("   Fare: " + String.format("%.2f", fare));
 				b.newLine();
 			}
 			b.flush();
