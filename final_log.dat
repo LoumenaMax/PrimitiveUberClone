@@ -1,0 +1,53 @@
+Total Amount of Trips: 5
+	Successful Trips: 5
+	Cancelled Trips: 0
+
+New Balance of Drivers:
+   John Doe: 0.00
+   Anderson Cooper: 0.00
+   Broseph Brohemian: 9.22
+   Jack Nicholson: 15.12
+   Joke Name: 21.03
+   Maximus Aurelius: 0.00
+   Not Even A Name: 0.00
+   Prince: 0.00
+   Homeless Dude: 3.46
+   XXXTentacion: 14.58
+New Balance of Passengers:
+   Dude: 100.00
+   Dudette: 30.00
+   Myself: 968.27
+   King James: 54.84
+   Coolio: 467.34
+
+Total Amount of Transactions: 5
+
+Rating Scores of Drivers:
+   John Doe: -1.0
+   Anderson Cooper: -1.0
+   Broseph Brohemian: 1.0
+   Jack Nicholson: 1.0
+   Joke Name: 1.0
+   Maximus Aurelius: -1.0
+   Not Even A Name: -1.0
+   Prince: -1.0
+   Homeless Dude: 1.0
+   XXXTentacion: 1.0
+
+Final Locations:
+   John Doe: (29,25)
+   Anderson Cooper: (164,67)
+   Broseph Brohemian: (118,215)
+   Jack Nicholson: (63,295)
+   Joke Name: (265,77)
+   Maximus Aurelius: (169,69)
+   Not Even A Name: (3,30)
+   Prince: (111,21)
+   Homeless Dude: (56,34)
+   XXXTentacion: (3,232)
+
+   Dude: (145,208)
+   Dudette: (258,277)
+   Myself: (3,232)
+   King James: (63,295)
+   Coolio: (265,77)
