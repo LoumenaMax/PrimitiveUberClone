@@ -1,0 +1,41 @@
+commit e61ea79b25ab6996ee54ee6b4423ab6a089a4d08
+Author: LoumenaMax <loumenamax@gmail.com>
+Date:   Sun Oct 22 21:23:51 2017 -0700
+
+    Added JavaDoc
+
+commit dc4035df9f9c7a921f3f64ad14fe5afc72694e18
+Author: LoumenaMax <loumenamax@gmail.com>
+Date:   Sun Oct 22 21:19:05 2017 -0700
+
+    Final Draft
+
+commit d5ef3bfd1c1e00ac09775ec78996f6a9c208cd83
+Author: LoumenaMax <loumenamax@gmail.com>
+Date:   Sun Oct 22 21:13:30 2017 -0700
+
+    Added log files
+
+commit 2de6dfb0d6fb00078f455fb044801e2196603881
+Author: LoumenaMax <loumenamax@gmail.com>
+Date:   Sun Oct 22 21:10:07 2017 -0700
+
+    Removed Client, replaced with Uber and TripRunner
+
+commit b56fe2a4d1de593f8b13b6a4f753181a44616f39
+Author: LoumenaMax <loumenamax@gmail.com>
+Date:   Sun Oct 22 00:46:34 2017 -0700
+
+    Added JavaDoc
+
+commit 28a79f4a1c2ce6ac48acec4ae647a81893ad78df
+Author: LoumenaMax <loumenamax@gmail.com>
+Date:   Sat Oct 21 22:43:46 2017 -0700
+
+    First working model
+
+commit 4a06ae4977f7242f4f2eb5f433030e4e50b93ebd
+Author: LoumenaMax <loumenamax@gmail.com>
+Date:   Fri Oct 20 23:07:37 2017 -0700
+
+    beginning draft
