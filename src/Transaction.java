@@ -28,8 +28,7 @@ public class Transaction {
 		return amount;
 	}
 	
-	/** Checks the spenders balance against the amount given.
-	 * @param amount The amount to check the spenders balance against
+	/** Checks the spenders balance against the amount.
 	 * @return True if the spender has enough money to make such a purchase, false otherwise.
 	 */
 	public boolean checkSpenderFunds() {

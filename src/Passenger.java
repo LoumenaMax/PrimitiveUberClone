@@ -8,8 +8,7 @@ public class Passenger extends Person{
 	
 	/**
 	 * @param name The Passenger's name
-	 * @param balance The amount of money the Passenger has.
-	 * @param client The interface between the Passenger and the Drivers.
+	 * @param wallet The amount of money the Passenger has.
 	 */
 	public Passenger(String name, Wallet wallet) {
 		super(name, wallet);

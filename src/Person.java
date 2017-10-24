@@ -13,7 +13,7 @@ public abstract class Person {
 	
 	/**
 	 * @param name The name of the person you wish to make a Person object of
-	 * @param balance The amount of money this Person will start with
+	 * @param wallet The amount of money this Person will start with
 	 */
 	public Person(String name, Wallet wallet) {
 		this.name = name;

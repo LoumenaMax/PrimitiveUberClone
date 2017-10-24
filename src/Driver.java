@@ -14,7 +14,7 @@ public class Driver extends Person{
 	
 	/**
 	 * @param name The name of the driver.
-	 * @param balance The amount of money this driver will start with.
+	 * @param wallet The amount of money this driver will start with.
 	 * @param carTitle The title of the car.
 	 */
 	public Driver(String name, Wallet wallet, String carTitle) {
@@ -67,8 +67,7 @@ public class Driver extends Person{
 	}
 	
 	
-	/** Asks a driver specified by driver to accept a trip specified by trip.
-	 * @param driver The driver you will ask to accept a ride.
+	/** Asks a driver specified by driver to accept a trip.
 	 * @param trip The trip you will retrieve information about the ride from
 	 * @return True if the driver accepts, False otherwise.
 	 */
@@ -78,9 +77,11 @@ public class Driver extends Person{
 			trip.getStart() + " to " + 
 			trip.getEnd() + "?(y\\n)");
 		if(rand.nextInt()%2 == 0 || rand.nextInt()%2==0) {
+			System.out.println(name + " accepts the trip.");
 			acceptRequest();
 			return true;
 		}
+		System.out.println(name + " rejects the trip.");
 		return false;
 	}
 }

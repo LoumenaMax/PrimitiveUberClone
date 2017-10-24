@@ -19,7 +19,6 @@ public class Trip {
 	
 	/**
 	 * Constructs a Trip 
-	 * @param start The starting point of the passenger
 	 * @param end Where the passenger wants to go to
 	 * @param passenger The passenger who is requesting a trip
 	 */
